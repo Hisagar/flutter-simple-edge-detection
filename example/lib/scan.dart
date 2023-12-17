@@ -19,11 +19,11 @@ class Scan extends StatefulWidget {
 }
 
 class _ScanState extends State<Scan> {
-  CameraController controller;
-  List<CameraDescription> cameras;
-  String imagePath;
-  String croppedImagePath;
-  EdgeDetectionResult edgeDetectionResult;
+  late CameraController controller;
+  late List<CameraDescription> cameras;
+  late String imagePath;
+  late String croppedImagePath;
+  late EdgeDetectionResult edgeDetectionResult;
 
   @override
   void initState() {
@@ -105,11 +105,11 @@ class _ScanState extends State<Scan> {
               );
             }
 
-            setState(() {
-              imagePath = null;
-              edgeDetectionResult = null;
-              croppedImagePath = null;
-            });
+            // setState(() {
+            //   imagePath = null;
+            //   edgeDetectionResult = null;
+            //   croppedImagePath = null;
+            // });
           },
         ),
       );
@@ -136,25 +136,17 @@ class _ScanState extends State<Scan> {
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
   Future<String> takePicture() async {
-    if (!controller.value.isInitialized) {
-      log('Error: select a camera first.');
-      return null;
-    }
-
     final Directory extDir = await getTemporaryDirectory();
     final String dirPath = '${extDir.path}/Pictures/flutter_test';
     await Directory(dirPath).create(recursive: true);
     final String filePath = '$dirPath/${timestamp()}.jpg';
 
-    if (controller.value.isTakingPicture) {
-      return null;
-    }
 
     try {
-      await controller.takePicture(filePath);
+      XFile file = await controller.takePicture();
+      file.saveTo(filePath);
     } on CameraException catch (e) {
       log(e.toString());
-      return null;
     }
     return filePath;
   }
@@ -175,8 +167,8 @@ class _ScanState extends State<Scan> {
     });
   }
 
-  Future _processImage(String filePath, EdgeDetectionResult edgeDetectionResult) async {
-    if (!mounted || filePath == null) {
+  void _processImage(String filePath, EdgeDetectionResult edgeDetectionResult) async {
+    if (!mounted) {
       return;
     }
 
@@ -203,12 +195,12 @@ class _ScanState extends State<Scan> {
 
   void _onGalleryButtonPressed() async {
     ImagePicker picker = ImagePicker();
-    PickedFile pickedFile = await picker.getImage(source: ImageSource.gallery);
-    final filePath = pickedFile.path;
+    PickedFile? pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final filePath = pickedFile?.path;
 
     log('Picture saved to $filePath');
 
-    _detectEdges(filePath);
+    _detectEdges(filePath!);
   }
 
   Padding _getBottomBar() {

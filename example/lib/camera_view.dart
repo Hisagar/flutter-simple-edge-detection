@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class CameraView extends StatelessWidget {
   CameraView({
-    this.controller
+    required this.controller
   });
 
   final CameraController controller;

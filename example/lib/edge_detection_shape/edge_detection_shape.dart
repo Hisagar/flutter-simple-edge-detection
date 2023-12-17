@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:simple_edge_detection/edge_detection.dart';
 
 import 'edge_painter.dart';
-import 'magnifier.dart';
+import 'magnifier.dart' as mg;
 import 'touch_bubble.dart';
 
 class EdgeDetectionShape extends StatefulWidget {
   EdgeDetectionShape({
-    @required this.renderedImageSize,
-    @required this.originalImageSize,
-    @required this.edgeDetectionResult
+    required this.renderedImageSize,
+    required this.originalImageSize,
+    required this.edgeDetectionResult
   });
 
   final Size renderedImageSize;
@@ -24,17 +24,17 @@ class EdgeDetectionShape extends StatefulWidget {
 }
 
 class _EdgeDetectionShapeState extends State<EdgeDetectionShape> {
-  double edgeDraggerSize;
+  late double edgeDraggerSize;
 
-  EdgeDetectionResult edgeDetectionResult;
-  List<Offset> points;
+  late EdgeDetectionResult edgeDetectionResult;
+  late List<Offset> points;
 
-  double renderedImageWidth;
-  double renderedImageHeight;
-  double top;
-  double left;
+  late double renderedImageWidth;
+  late double renderedImageHeight;
+  late double top;
+  late double left;
 
-  Offset currentDragPosition;
+  late Offset currentDragPosition;
 
   @override
   void didChangeDependencies() {
@@ -53,7 +53,7 @@ class _EdgeDetectionShapeState extends State<EdgeDetectionShape> {
 
   @override
   Widget build(BuildContext context) {
-    return Magnifier(
+    return mg.Magnifier(
       visible: currentDragPosition != null,
       position: currentDragPosition,
       child: Stack(
@@ -62,7 +62,7 @@ class _EdgeDetectionShapeState extends State<EdgeDetectionShape> {
           CustomPaint(
             painter: EdgePainter(
               points: points,
-              color: Theme.of(context).accentColor.withOpacity(0.5)
+              color: Theme.of(context).primaryColor.withOpacity(0.5)
             )
           )
         ],
@@ -127,7 +127,7 @@ class _EdgeDetectionShapeState extends State<EdgeDetectionShape> {
     ];
 
     final Function onDragFinished = () {
-      currentDragPosition = null;
+      currentDragPosition = null!;
       setState(() {});
     };
 

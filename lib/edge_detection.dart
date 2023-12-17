@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 
 class Coordinate extends Struct {
   @Double()
-  double x;
+  external double x;
 
   @Double()
-  double y;
+  external double y;
 
   factory Coordinate.allocate(double x, double y) =>
       malloc<Coordinate>().ref
@@ -20,10 +20,14 @@ class Coordinate extends Struct {
 }
 
 class NativeDetectionResult extends Struct {
-  Pointer<Coordinate> topLeft;
-  Pointer<Coordinate> topRight;
-  Pointer<Coordinate> bottomLeft;
-  Pointer<Coordinate> bottomRight;
+  external Pointer<Coordinate> topLeft;
+  external Pointer<Coordinate> topRight;
+  external Pointer<Coordinate> bottomLeft;
+  external Pointer<Coordinate> bottomRight;
+  external Pointer<Coordinate> leftMid;
+  external Pointer<Coordinate> bottomMid;
+  external Pointer<Coordinate> topMid;
+  external Pointer<Coordinate> rightMid;
 
   factory NativeDetectionResult.allocate(
       Pointer<Coordinate> topLeft,
@@ -39,16 +43,24 @@ class NativeDetectionResult extends Struct {
 
 class EdgeDetectionResult {
   EdgeDetectionResult({
-    @required this.topLeft,
-    @required this.topRight,
-    @required this.bottomLeft,
-    @required this.bottomRight,
+    required this.topLeft,
+    required this.topRight,
+    required this.bottomLeft,
+    required this.bottomRight,
+    required this.leftMid,
+    required this.bottomMid,
+    required this.topMid,
+    required this.rightMid,
   });
 
   Offset topLeft;
   Offset topRight;
   Offset bottomLeft;
   Offset bottomRight;
+  Offset leftMid;
+  Offset bottomMid;
+  Offset topMid;
+  Offset rightMid;
 }
 
 typedef DetectEdgesFunction = Pointer<NativeDetectionResult> Function(
@@ -103,7 +115,19 @@ class EdgeDetection {
         ),
         bottomRight: Offset(
             detectionResult.bottomRight.ref.x, detectionResult.bottomRight.ref.y
-        )
+        ),
+        leftMid: Offset(
+            detectionResult.leftMid.ref.x, detectionResult.leftMid.ref.y
+        ),
+        bottomMid: Offset(
+            detectionResult.bottomMid.ref.x, detectionResult.bottomMid.ref.y
+        ),
+        topMid: Offset(
+            detectionResult.topMid.ref.x, detectionResult.topMid.ref.y
+        ),
+        rightMid: Offset(
+            detectionResult.rightMid.ref.x, detectionResult.rightMid.ref.y
+        ),
     );
   }
 
